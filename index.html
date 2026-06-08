@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Library</title>
+
+    <style>
+        /*import fonts and global variables*/
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Source+Sans+3:wght@300;400;500;600&display=swap');
+
+    :root {
+    --white: #ffffff;
+    --green: #27694d;
+    --red: #ef4444;
+    
+    --title: #2b2622;
+    --text: #7c736a;
+    --border: #E7E2DA;
+
+    --background: #f7f4ef;
+    --card: #fcfaf7;
+    --secondary: #eeebe4;
+    --favorite: #eaf0ed;
+}
+body{
+    margin: 0;
+    padding: 0;
+    background-color: var(--background);
+    color: var(--text);
+    font-family: 'Source Sans 3', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+}
+
+* {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+}
+/*header styles*/
+header{
+    padding: 30px 60px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+}
+.head-logo{
+    width: 20px;
+    height: 20px;
+    background-color: var(--green);
+    padding: 8px;
+    border-radius: 8px;
+    object-fit: contain;
+    margin-bottom: 17px;
+}
+.head-container{
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+.head-title{
+    font-family: 'Playfair Display';
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--title);
+    line-height: 0.2;
+}
+.head-subtitle{
+    font-size: 14px;
+    line-height: 1;
+}
+
+.favorites-toggle {
+    display: none;
+    background-color: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.favorites-toggle svg {
+    width: 22px;
+    height: 22px;
+}
+
+.favorites-toggle svg path {
+    stroke: var(--text);
+}
+
+.favorites-toggle .fav-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background-color: var(--red);
+    color: var(--white);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 600;
+}
+/*info section styles*/
+.info-section{
+    text-align: center;
+    padding: 40px 20px 25px 20px;
+}
+.info-section h1{
+    font-family: 'Playfair Display';
+    font-size: 40px;
+    font-weight: 800;
+    color: var(--title);
+    line-height: 0.2;
+}
+.info-section p{
+    font-size: 18px;
+    margin: 0 auto;
+    max-width: 560px;
+}
+/*search section styles*/
+.search-section{
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin: 0 auto 40px auto;
+    max-width: 620px;
+    align-items: center;
+}
+.search-wrapper{
+    display: flex;
+    align-items: center;
+    background-color: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0 14px;
+    flex: 1;
+    height: 44px;
+}
+.search-wrapper input{
+    border: none;
+    width: 100%;
+    font-size: 14px;
+    margin-left: 10px;
+    outline: none;
+}
+#btn{
+    background-color: var(--green);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    padding: 0 22px;
+    height: 44px;
+    cursor: pointer;
+}
+#btn:hover {
+    background-color: var(--white);
+    color: var(--green);
+}
+/*library styles*/
+.main-layout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 30px;
+    padding: 0 60px;
+    max-width: 1600px;
+    margin: 0 auto 60px auto;
+}
+.books-grid{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 20px;
+    align-content: start;
+}
+/*book card styles*/
+.book-card{
+    background-color: var(--background);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    background-color: var(--card);
+    box-shadow: 0 4px 16px var(--border),
+                0 2px 4px var(--border);
+}
+.book-cover-container{
+    position: relative;
+    width: 100%;
+    height: 320px;
+    background-color: var(--secondary);
+}
+.book-cover {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.book-cover-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--secondary);
+    color: var(--text);
+    font-size: 16px;
+    text-align: center;
+    padding: 20px;
+}
+.fav-btn{
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: var(--white);
+    border: none;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.fav-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+.fav-btn svg path {
+    fill: none;
+    stroke: var(--text);
+    transition: all 0.2s;
+}
+
+.fav-btn.active svg path {
+    fill: var(--red);
+    stroke: var(--red);
+}
+/*Text styles inside the card */
+.book-info {
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.book-info h4 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--title);
+}
+.book-author {
+    margin: 0;
+    font-size: 16px;
+}
+.book-year {
+    margin: 0;
+    font-size: 14px;
+}
+/*sidebar*/
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+.favorites-sidebar {
+    background-color: var(--card); 
+    border-radius: 12px;           
+    padding: 20px;            
+    height: fit-content;           
+    border: 1px solid var(--border);                  
+    width: 100%; 
+    height: 100%;                 
+    min-width: 280px;             
+    box-sizing: border-box;
+    transition: transform 0.3s ease;
+}
+
+.favorites-sidebar.mobile-sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 320px;
+    max-width: 85vw;
+    height: 100vh;
+    border-radius: 0;
+    z-index: 1000;
+    transform: translateX(100%);
+    overflow-y: auto;
+}
+
+.favorites-sidebar.mobile-sidebar.active {
+    transform: translateX(0);
+}
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border); 
+}
+.sidebar-header .sidebar-icon {
+    width: 16px;
+    height: 16px;
+    background-color: var(--favorite);
+    padding: 6px;
+    border-radius: 6px;           
+}
+.sidebar-header h3 {
+    margin: 0;
+    font-family: 'Playfair Display';
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--title);
+}
+.fav-count {
+    font-size: 14px;
+    color: var(--text);
+    display: block;
+    margin-top: 2px;
+}
+.fav-list-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.fav-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px;
+    border-radius: 8px;
+    background-color: var(--background);
+    border: 1px solid var(--border);
+}
+.fav-item:last-child {
+    border-bottom: 1px solid var(--border); 
+}
+.fav-item-cover {
+    width: 60px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 8px;
+    flex-shrink: 0;
+}
+
+.fav-item-cover-placeholder {
+    background-color: var(--secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: var(--text);
+    text-align: center;
+    padding: 4px;
+}
+.fav-item-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+.fav-item-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--title);
+    margin: 0;
+    overflow: hidden;
+}
+.fav-item-author {
+    font-size: 12px;
+    color: var(--text);
+    margin: 0;
+}
+.fav-item-remove {
+    background-color: var(--white);
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    flex-shrink: 0;
+}
+
+.fav-item-remove svg {
+    width: 16px;
+    height: 16px;
+}
+
+.fav-item-remove svg path {
+    fill: var(--red);
+    stroke: var(--red);
+}
+
+.fav-item-remove:hover {
+    background-color: var(--secondary);
+}
+/*footer styles*/
+footer {
+    text-align: center;
+    padding: 40px 20px;
+    margin-top: 60px;
+    border-top: 1px solid var(--border);
+}
+footer p {
+    margin: 0;
+    font-size: 14px;
+    color: var(--text);
+}
+footer a {
+    color: var(--green);
+    text-decoration: none;
+}
+footer a:hover {
+    text-decoration: underline;
+}
+
+/*mobile styles*/
+@media (max-width: 768px) {
+    header {
+        padding: 20px;
+        gap: 8px;
+    }
+    
+    .head-logo {
+        width: 16px;
+        height: 16px;
+        padding: 6px;
+        margin-bottom: 12px;
+    }
+    
+    .head-title {
+        font-size: 20px;
+    }
+    
+    .head-subtitle {
+        font-size: 12px;
+    }
+    
+    .favorites-toggle {
+        display: flex;
+    }
+    
+    .info-section {
+        padding: 30px 20px 20px 20px;
+    }
+    
+    .info-section h1 {
+        font-size: 28px;
+        line-height: 1.2;
+    }
+    
+    .info-section p {
+        font-size: 14px;
+    }
+    
+    .search-section {
+        flex-direction: column;
+        padding: 0 20px;
+        width: 100%;
+        box-sizing: border-box;
+        margin: 0 auto 30px auto;
+    }
+    
+    .search-wrapper {
+        width: 100%;
+    }
+    
+    #btn {
+        width: 100%;
+    }
+    
+    .main-layout {
+        grid-template-columns: 1fr;
+        padding: 0 20px;
+        gap: 0;
+        margin: 0 auto 40px auto;
+    }
+    
+    .books-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+    
+    .book-cover-container {
+        height: 150px;
+    }
+    
+    .book-info {
+        padding: 8px;
+        gap: 2px;
+    }
+    
+    .book-info h4 {
+        font-size: 12px;
+        line-height: 1.2;
+    }
+    
+    .book-author {
+        font-size: 10px;
+    }
+    
+    .book-year {
+        font-size: 10px;
+    }
+    
+    .fav-btn {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .fav-btn svg {
+        width: 14px;
+        height: 14px;
+    }
+    
+    .favorites-sidebar:not(.mobile-sidebar) {
+        display: none;
+    }
+    
+    footer {
+        padding: 30px 20px;
+        margin-top: 40px;
+    }
+}
+
+@media (max-width: 420px) {
+    .info-section h1 {
+        font-size: 24px;
+    }
+    
+    .info-section p {
+        font-size: 13px;
+    }
+    
+    .books-grid {
+        gap: 10px;
+    }
+    
+    .book-cover-container {
+        height: 130px;
+    }
+    
+    .book-info {
+        padding: 6px;
+    }
+    
+    .book-info h4 {
+        font-size: 11px;
+    }
+    
+    .book-author {
+        font-size: 9px;
+    }
+    
+    .book-year {
+        font-size: 9px;
+    }
+}
+    </style>
+
+
+
+</head>
+<body>
+    <div class="sidebar-overlay"></div>
+    
+    <header>
+        <img src="assets/book.svg" alt ="logo" class = "head-logo">
+        <div class = "head-container">
+            <b class = "head-title">The Library</b>
+            <p class="head-subtitle">Discover your next favorite book</p>
+        </div>
+        <button class="favorites-toggle" type="button">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12.6667 9.33333C13.66 8.36 14.6667 7.19333 14.6667 5.66667C14.6667 4.69421 14.2804 3.76158 13.5928 3.07394C12.9051 2.38631 11.9725 2 11 2C9.82671 2 9.00004 2.33333 8.00004 3.33333C7.00004 2.33333 6.17337 2 5.00004 2C4.02758 2 3.09495 2.38631 2.40732 3.07394C1.71968 3.76158 1.33337 4.69421 1.33337 5.66667C1.33337 7.2 2.33337 8.36667 3.33337 9.33333L8.00004 14L12.6667 9.33333Z" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+        </button>
+    </header>
+
+    <div class = "info-section">
+    <h1>Discover Your Next Great Read </h1>
+    <p>Search million of books, build your personal library, and never lose track of what to read next.</p>
+    </div>
+
+    <div class="search-section">
+        <div class = "search-wrapper">
+            <img src="assets/search.svg" alt="search" class="search-icon">
+            <input type="text" id ="input" placeholder="Search for books by title or author...">   
+        </div>
+        <button type="button" id="btn">Search</button>
+    </div>
+
+ <div class="main-layout">
+        <div class="books-grid"></div>
+        
+        <aside class="favorites-sidebar">
+            <div class="sidebar-header">
+                <img src="assets/heart.svg" alt="Favorites" class="sidebar-icon">
+                <div>
+                    <h3>Favorites</h3>
+                    <span class="fav-count">0 books saved</span>
+                </div>
+            </div>
+            <div class="fav-list-container"></div>
+        </aside>
+        
+        <aside class="favorites-sidebar mobile-sidebar">
+            <div class="sidebar-header">
+                <img src="assets/heart.svg" alt="Favorites" class="sidebar-icon">
+                <div>
+                    <h3>Favorites</h3>
+                    <span class="fav-count-mobile">0 books saved</span>
+                </div>
+            </div>
+            <div class="fav-list-container-mobile"></div>
+        </aside>
+    </div>
+
+<footer>
+    <p>Powered by <a href="https://openlibrary.org" target="_blank" rel="noopener noreferrer">Open Library</a></p>
+</footer>
+
+<script src="main.js"></script>
+</body>
+</html>
